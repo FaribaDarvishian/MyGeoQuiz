@@ -4,6 +4,16 @@ public class Question {
     private int mQuestionTextResId;
     private boolean mIsAnswerTrue;
 
+    public boolean isIsAnswered() {
+        return mIsAnswered;
+    }
+
+    public void setIsAnswered(boolean mIsAnswered) {
+        this.mIsAnswered = mIsAnswered;
+    }
+
+    private boolean mIsAnswered;
+
     public int getQuestionTextResId() {
         return mQuestionTextResId;
     }

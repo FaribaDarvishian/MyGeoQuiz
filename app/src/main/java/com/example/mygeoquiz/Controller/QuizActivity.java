@@ -1,6 +1,8 @@
 package com.example.mygeoquiz.Controller;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.text.style.ClickableSpan;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -20,9 +22,11 @@ public class QuizActivity extends AppCompatActivity {
     private ImageButton mImageButtonPrev;
     private ImageButton mImageButtonLast;
     private ImageButton mImageButtonFirst;
+    private TextView mTextViewScore;
 
 
     private int mCurrentIndex = 0;
+    private int mCurrentScore=0;
     private Question[] mQuestionBank = {
             new Question(R.string.question_australia, false),
             new Question(R.string.question_oceans, true),
@@ -52,7 +56,8 @@ public class QuizActivity extends AppCompatActivity {
     }
 
     private void findViews() {
-        mTextViewQuestion = findViewById(R.id.txtview_question_text);
+        mTextViewQuestion = findViewById(R.id.txt_view_question_text);
+        mTextViewScore=findViewById(R.id.txt_view_score_text);
         mButtonTrue = findViewById(R.id.btn_true);
         mButtonFalse = findViewById(R.id.btn_false);
         mImageButtonNext= findViewById(R.id.im_btn_next);
@@ -81,6 +86,7 @@ public class QuizActivity extends AppCompatActivity {
             public void onClick(View view) {
                 mCurrentIndex = (mCurrentIndex + 1) % mQuestionBank.length;
                 updateQuestion();
+
             }
         });
 
@@ -110,15 +116,36 @@ public class QuizActivity extends AppCompatActivity {
     private void updateQuestion() {
         int questionTextResId = mQuestionBank[mCurrentIndex].getQuestionTextResId();
         mTextViewQuestion.setText(questionTextResId);
+        if(mQuestionBank[mCurrentIndex].isIsAnswered()==false)
+        {
+        mButtonTrue.setVisibility(View.VISIBLE);
+        mButtonFalse.setVisibility(View.VISIBLE);
+        mQuestionBank[mCurrentIndex].setIsAnswered(true);
+        }
+        else {
+            mButtonTrue.setVisibility(View.INVISIBLE);
+            mButtonFalse.setVisibility(View.INVISIBLE);
+        }
     }
 
+    private void updateScore(){
+        mTextViewScore.setText("Score :" + ++mCurrentScore);
+    }
+
+    @SuppressLint("WrongConstant")
     private void checkAnswer(boolean userPressed) {
         if (mQuestionBank[mCurrentIndex].isAnswerTrue() == userPressed) {
             Toast.makeText(QuizActivity.this, R.string.toast_correct, Toast.LENGTH_LONG)
                     .show();
+            updateScore();
+
         } else {
             Toast.makeText(QuizActivity.this, R.string.toast_incorrect, Toast.LENGTH_SHORT)
                     .show();
+
         }
+
+        mButtonTrue.setVisibility(View.INVISIBLE);
+        mButtonFalse.setVisibility(View.INVISIBLE);
     }
 }
