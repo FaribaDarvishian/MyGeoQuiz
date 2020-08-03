@@ -27,6 +27,7 @@ public class QuizActivity extends AppCompatActivity {
     private TextView mTextViewScore;
     private LinearLayout mScoreLayout;
     private TextView mTextViewFinalScore;
+    private ImageButton mImageButtonReset;
 
 
     private int mCurrentIndex = 0;
@@ -74,6 +75,7 @@ public class QuizActivity extends AppCompatActivity {
         mMainLayout=findViewById(R.id.main);
         mScoreLayout=findViewById(R.id.score);
         mTextViewFinalScore=findViewById(R.id.txt_final_score);
+        mImageButtonReset=findViewById(R.id.im_btn_reset);
 
     }
 
@@ -122,6 +124,26 @@ public class QuizActivity extends AppCompatActivity {
                 updateQuestion();
             }
         });
+        mImageButtonReset.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mScoreLayout.setVisibility(View.GONE);
+                goToMainLayout();
+            }
+        });
+
+    }
+    private void goToMainLayout(){
+        mCurrentScore=0;
+        mTextViewScore.setText("Score is " + mCurrentScore);
+        mButtonTrue.setVisibility(View.VISIBLE);
+        mButtonFalse.setVisibility(View.VISIBLE);
+        for (Question element:mQuestionBank) {
+            element.setIsAnswered(false);
+
+        }
+        mMainLayout.setVisibility(View.VISIBLE);
+
     }
 
     private void updateQuestion() {
