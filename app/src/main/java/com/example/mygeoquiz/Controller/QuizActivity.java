@@ -2,10 +2,12 @@ package com.example.mygeoquiz.Controller;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.text.Layout;
 import android.text.style.ClickableSpan;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.example.mygeoquiz.Model.Question;
@@ -14,7 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.mygeoquiz.R;
 
 public class QuizActivity extends AppCompatActivity {
-
+    private LinearLayout mMainLayout;
     private TextView mTextViewQuestion;
     private Button mButtonTrue;
     private Button mButtonFalse;
@@ -23,10 +25,13 @@ public class QuizActivity extends AppCompatActivity {
     private ImageButton mImageButtonLast;
     private ImageButton mImageButtonFirst;
     private TextView mTextViewScore;
+    private LinearLayout mScoreLayout;
+    private TextView mTextViewFinalScore;
 
 
     private int mCurrentIndex = 0;
     private int mCurrentScore=0;
+    private int mNumOfAnswered=0;
     private Question[] mQuestionBank = {
             new Question(R.string.question_australia, false),
             new Question(R.string.question_oceans, true),
@@ -51,10 +56,12 @@ public class QuizActivity extends AppCompatActivity {
         //if we want to change logic we must first find the view objects (it must have "id")
         findViews();
         setListeners();
-
         updateQuestion();
+        checkGameOver();
+
     }
 
+    @SuppressLint("WrongViewCast")
     private void findViews() {
         mTextViewQuestion = findViewById(R.id.txt_view_question_text);
         mTextViewScore=findViewById(R.id.txt_view_score_text);
@@ -64,6 +71,10 @@ public class QuizActivity extends AppCompatActivity {
         mImageButtonPrev = findViewById(R.id.im_btn_prev);
         mImageButtonLast = findViewById(R.id.im_btn_last);
         mImageButtonFirst= findViewById(R.id.im_btn_first);
+        mMainLayout=findViewById(R.id.main);
+        mScoreLayout=findViewById(R.id.score);
+        mTextViewFinalScore=findViewById(R.id.txt_final_score);
+
     }
 
     private void setListeners() {
@@ -126,6 +137,7 @@ public class QuizActivity extends AppCompatActivity {
             mButtonTrue.setVisibility(View.INVISIBLE);
             mButtonFalse.setVisibility(View.INVISIBLE);
         }
+        checkGameOver();
     }
 
     private void updateScore(){
@@ -147,5 +159,22 @@ public class QuizActivity extends AppCompatActivity {
 
         mButtonTrue.setVisibility(View.INVISIBLE);
         mButtonFalse.setVisibility(View.INVISIBLE);
+        ++mNumOfAnswered;
+    }
+    private void showFinalScore(){
+        mTextViewFinalScore.setText("your score is : "+ mCurrentScore);
+        mTextViewFinalScore.setTextSize(30);
+
+    }
+    private void checkGameOver(){
+        if (mNumOfAnswered==mQuestionBank.length){
+            mMainLayout.setVisibility(View.GONE);
+            mScoreLayout.setVisibility(View.VISIBLE);
+            showFinalScore();
+
+
+
+        }
+
     }
 }
