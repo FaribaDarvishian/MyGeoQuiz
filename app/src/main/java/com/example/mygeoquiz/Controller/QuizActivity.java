@@ -2,8 +2,6 @@ package com.example.mygeoquiz.Controller;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.text.Layout;
-import android.text.style.ClickableSpan;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -58,7 +56,7 @@ public class QuizActivity extends AppCompatActivity {
         findViews();
         setListeners();
         updateQuestion();
-        checkGameOver();
+//        checkGameOver();
 
     }
 
@@ -83,14 +81,24 @@ public class QuizActivity extends AppCompatActivity {
         mButtonTrue.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                ++mNumOfAnswered;
+                mButtonTrue.setVisibility(View.INVISIBLE);
+                mButtonFalse.setVisibility(View.INVISIBLE);
+                mQuestionBank[mCurrentIndex].setIsAnswered(true);
                 checkAnswer(true);
+
             }
         });
 
         mButtonFalse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                ++mNumOfAnswered;
+                mButtonTrue.setVisibility(View.INVISIBLE);
+                mButtonFalse.setVisibility(View.INVISIBLE);
+                mQuestionBank[mCurrentIndex].setIsAnswered(true);
                 checkAnswer(false);
+
             }
         });
 
@@ -99,6 +107,7 @@ public class QuizActivity extends AppCompatActivity {
             public void onClick(View view) {
                 mCurrentIndex = (mCurrentIndex + 1) % mQuestionBank.length;
                 updateQuestion();
+
 
             }
         });
@@ -128,16 +137,19 @@ public class QuizActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 mScoreLayout.setVisibility(View.GONE);
-                goToMainLayout();
+                resetGame();
             }
         });
 
     }
-    private void goToMainLayout(){
+    private void resetGame(){
         mCurrentScore=0;
+        mCurrentIndex=0;
         mTextViewScore.setText("Score is " + mCurrentScore);
         mButtonTrue.setVisibility(View.VISIBLE);
         mButtonFalse.setVisibility(View.VISIBLE);
+        mNumOfAnswered=0;
+
         for (Question element:mQuestionBank) {
             element.setIsAnswered(false);
 
@@ -153,7 +165,7 @@ public class QuizActivity extends AppCompatActivity {
         {
         mButtonTrue.setVisibility(View.VISIBLE);
         mButtonFalse.setVisibility(View.VISIBLE);
-        mQuestionBank[mCurrentIndex].setIsAnswered(true);
+
         }
         else {
             mButtonTrue.setVisibility(View.INVISIBLE);
@@ -181,7 +193,7 @@ public class QuizActivity extends AppCompatActivity {
 
         mButtonTrue.setVisibility(View.INVISIBLE);
         mButtonFalse.setVisibility(View.INVISIBLE);
-        ++mNumOfAnswered;
+
     }
     private void showFinalScore(){
         mTextViewFinalScore.setText("your score is : "+ mCurrentScore);
