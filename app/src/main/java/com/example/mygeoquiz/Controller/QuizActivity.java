@@ -82,8 +82,8 @@ public class QuizActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 ++mNumOfAnswered;
-                mButtonTrue.setVisibility(View.INVISIBLE);
-                mButtonFalse.setVisibility(View.INVISIBLE);
+                mButtonTrue.setEnabled(false);
+                mButtonFalse.setEnabled(false);
                 mQuestionBank[mCurrentIndex].setIsAnswered(true);
                 checkAnswer(true);
 
@@ -94,8 +94,8 @@ public class QuizActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 ++mNumOfAnswered;
-                mButtonTrue.setVisibility(View.INVISIBLE);
-                mButtonFalse.setVisibility(View.INVISIBLE);
+                mButtonTrue.setEnabled(false);
+                mButtonFalse.setEnabled(false);
                 mQuestionBank[mCurrentIndex].setIsAnswered(true);
                 checkAnswer(false);
 
@@ -146,8 +146,8 @@ public class QuizActivity extends AppCompatActivity {
         mCurrentScore=0;
         mCurrentIndex=0;
         mTextViewScore.setText("Score is " + mCurrentScore);
-        mButtonTrue.setVisibility(View.VISIBLE);
-        mButtonFalse.setVisibility(View.VISIBLE);
+        mButtonTrue.setEnabled(true);
+        mButtonFalse.setEnabled(true);
         mNumOfAnswered=0;
 
         for (Question element:mQuestionBank) {
@@ -163,13 +163,13 @@ public class QuizActivity extends AppCompatActivity {
         mTextViewQuestion.setText(questionTextResId);
         if(mQuestionBank[mCurrentIndex].isIsAnswered()==false)
         {
-        mButtonTrue.setVisibility(View.VISIBLE);
-        mButtonFalse.setVisibility(View.VISIBLE);
+            mButtonTrue.setEnabled(true);
+            mButtonFalse.setEnabled(true);
 
         }
         else {
-            mButtonTrue.setVisibility(View.INVISIBLE);
-            mButtonFalse.setVisibility(View.INVISIBLE);
+            mButtonTrue.setEnabled(false);
+            mButtonFalse.setEnabled(false);
         }
         checkGameOver();
     }
@@ -190,9 +190,6 @@ public class QuizActivity extends AppCompatActivity {
                     .show();
 
         }
-
-        mButtonTrue.setVisibility(View.INVISIBLE);
-        mButtonFalse.setVisibility(View.INVISIBLE);
 
     }
     private void showFinalScore(){

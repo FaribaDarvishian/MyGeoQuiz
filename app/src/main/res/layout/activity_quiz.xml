@@ -19,7 +19,7 @@
             android:id="@+id/txt_view_score_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Scoure : 0"
+            android:text="@string/score_0"
             android:textSize="16dp"
             android:translationX="-150dp"
             android:translationY="-150dp" />
@@ -67,13 +67,15 @@
                 android:id="@+id/im_btn_first"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@android:drawable/ic_media_rew" />
+                android:src="@android:drawable/ic_media_rew"
+                android:contentDescription="TODO" />
 
             <ImageButton
                 android:id="@+id/im_btn_prev"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@android:drawable/ic_media_previous" />
+                android:src="@android:drawable/ic_media_previous"
+                android:contentDescription="TODO" />
 
             <ImageButton
                 android:id="@+id/im_btn_next"
