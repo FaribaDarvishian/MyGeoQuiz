@@ -17,4 +17,10 @@
     <string name="button_next">بعدی</string>
     <string name="button_previous">قبلی</string>
     <string name="score_0">Score : 0</string>
+    <string name="current_index">currentIndex</string>
+    <string name="number_of_answerd">number</string>
+    <string name="question_bank">Question_bank</string>
+    <string name="Current_Index" />
+    <string name="Number_Of_Answerd" />
+    <string name="Question_Bank" />
 </resources>

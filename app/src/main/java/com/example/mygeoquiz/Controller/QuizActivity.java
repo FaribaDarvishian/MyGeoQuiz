@@ -2,6 +2,7 @@ package com.example.mygeoquiz.Controller;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -10,10 +11,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.example.mygeoquiz.Model.Question;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.mygeoquiz.R;
 
-public class QuizActivity extends AppCompatActivity {
+import java.io.Serializable;
+
+public class QuizActivity extends AppCompatActivity implements Serializable {
     private LinearLayout mMainLayout;
     private TextView mTextViewQuestion;
     private Button mButtonTrue;
@@ -51,12 +55,28 @@ public class QuizActivity extends AppCompatActivity {
         //this method will create the layout
         //inflate: creating object of xml layout
         setContentView(R.layout.activity_quiz);
+        if (savedInstanceState != null) {
+            mCurrentIndex = savedInstanceState.getInt("Current_Index");
+            mNumOfAnswered=savedInstanceState.getInt("Number_Of_Answered");
+            mQuestionBank=(Question[]) savedInstanceState.getSerializable("Question_Bank");
+        } else {
+
+        }
 
         //if we want to change logic we must first find the view objects (it must have "id")
         findViews();
         setListeners();
         updateQuestion();
-//        checkGameOver();
+
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState, @NonNull PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState, outPersistentState);
+        outState.putInt(getString(R.string.Current_Index),mCurrentIndex);
+        outState.putInt(getString(R.string.Number_Of_Answerd),mNumOfAnswered);
+        outState.putSerializable(getString(R.string.Question_Bank),mQuestionBank);
+
 
     }
 
@@ -70,10 +90,10 @@ public class QuizActivity extends AppCompatActivity {
         mImageButtonPrev = findViewById(R.id.im_btn_prev);
         mImageButtonLast = findViewById(R.id.im_btn_last);
         mImageButtonFirst= findViewById(R.id.im_btn_first);
-        mMainLayout=findViewById(R.id.main);
-        mScoreLayout=findViewById(R.id.score);
         mTextViewFinalScore=findViewById(R.id.txt_final_score);
         mImageButtonReset=findViewById(R.id.im_btn_reset);
+        mScoreLayout=findViewById(R.id.score);
+        mMainLayout=findViewById(R.id.main);
 
     }
 
@@ -161,7 +181,7 @@ public class QuizActivity extends AppCompatActivity {
     private void updateQuestion() {
         int questionTextResId = mQuestionBank[mCurrentIndex].getQuestionTextResId();
         mTextViewQuestion.setText(questionTextResId);
-        if(mQuestionBank[mCurrentIndex].isIsAnswered()==false)
+        if(!mQuestionBank[mCurrentIndex].isIsAnswered())
         {
             mButtonTrue.setEnabled(true);
             mButtonFalse.setEnabled(true);
