@@ -18,6 +18,8 @@ import com.example.mygeoquiz.R;
 public class CheatActivity extends AppCompatActivity {
 
     public static final String EXTRA_IS_CHEAT = "com.example.MyGeoQuiz2.isCheat";
+
+
     public static final String TEXT_VIEW_ANSWER = "TextViewAnswer";
     private TextView mTextViewAnswer;
     private Button mButtonShowAnswer;

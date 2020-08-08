@@ -25,10 +25,12 @@ import java.io.Serializable;
 public class QuizActivity extends AppCompatActivity implements Serializable {
 
     public static final String EXTRA_QUESTION_ANSWER = "com.example.GeoQuiz.questionAnswer";
+    private static final String EXTRA_SETTING="com.example.GeoQuiz.textSize";
     public static final String CURRENT_INDEX = "Current_Index";
     public static final String NUMBER_OF_ANSWERED = "Number_Of_Answered";
     public static final String QUESTION_BANK = "Question_Bank";
     public static final int REQUEST_CODE_CHEAT = 0;
+    public static final int REQUEST_CODE_SETTING = 1;
 
     private LinearLayout mMainLayout;
     private TextView mTextViewQuestion;
@@ -43,11 +45,13 @@ public class QuizActivity extends AppCompatActivity implements Serializable {
     private LinearLayout mScoreLayout;
     private TextView mTextViewFinalScore;
     private ImageButton mImageButtonReset;
+    private ImageButton mImageButtonSetting;
 
     private boolean mIsCheater = false;
     private int mCurrentIndex = 0;
     private int mCurrentScore=0;
     private int mNumOfAnswered=0;
+    private int mTextSize;
     private Question[] mQuestionBank = {
             new Question(R.string.question_australia, false),
             new Question(R.string.question_oceans, true),
@@ -109,6 +113,10 @@ public class QuizActivity extends AppCompatActivity implements Serializable {
             // if we on score page this method check and set visibility
             checkGameOver();
         }
+        if(requestCode==REQUEST_CODE_SETTING){
+            mTextSize =data.getIntExtra(SettingActivity.EXTRA_IS_SETTING,15);
+            //todo
+        }
     }
 
 
@@ -123,6 +131,7 @@ public class QuizActivity extends AppCompatActivity implements Serializable {
         mImageButtonPrev = findViewById(R.id.im_btn_prev);
         mImageButtonLast = findViewById(R.id.im_btn_last);
         mImageButtonFirst= findViewById(R.id.im_btn_first);
+        mImageButtonSetting=findViewById(R.id.im_btn_setting);
         mTextViewFinalScore=findViewById(R.id.txt_final_score);
         mImageButtonReset=findViewById(R.id.im_btn_reset);
         mScoreLayout=findViewById(R.id.score);
@@ -160,6 +169,7 @@ public class QuizActivity extends AppCompatActivity implements Serializable {
             public void onClick(View view) {
                 mCurrentIndex = (mCurrentIndex + 1) % mQuestionBank.length;
                 updateQuestion();
+
 
 
             }
@@ -200,6 +210,15 @@ public class QuizActivity extends AppCompatActivity implements Serializable {
                 intent.putExtra(EXTRA_QUESTION_ANSWER, mQuestionBank[mCurrentIndex].isAnswerTrue());
 
                 startActivityForResult(intent, REQUEST_CODE_CHEAT);
+            }
+        });
+        mImageButtonSetting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(QuizActivity.this, SettingActivity.class);
+//                intent.putExtra(EXTRA_SETTING,mTextSize);
+
+                startActivityForResult(intent, REQUEST_CODE_SETTING);
             }
         });
 
