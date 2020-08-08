@@ -1,27 +1,40 @@
 package com.example.mygeoquiz.Controller;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.view.View;
+
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.example.mygeoquiz.Model.Question;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.mygeoquiz.R;
 
 import java.io.Serializable;
 
 public class QuizActivity extends AppCompatActivity implements Serializable {
+
+    public static final String EXTRA_QUESTION_ANSWER = "com.example.GeoQuiz.questionAnswer";
+    public static final String CURRENT_INDEX = "Current_Index";
+    public static final String NUMBER_OF_ANSWERED = "Number_Of_Answered";
+    public static final String QUESTION_BANK = "Question_Bank";
+    public static final int REQUEST_CODE_CHEAT = 0;
+
     private LinearLayout mMainLayout;
     private TextView mTextViewQuestion;
     private Button mButtonTrue;
     private Button mButtonFalse;
+    private Button mButtonCheat;
     private ImageButton mImageButtonNext;
     private ImageButton mImageButtonPrev;
     private ImageButton mImageButtonLast;
@@ -31,7 +44,7 @@ public class QuizActivity extends AppCompatActivity implements Serializable {
     private TextView mTextViewFinalScore;
     private ImageButton mImageButtonReset;
 
-
+    private boolean mIsCheater = false;
     private int mCurrentIndex = 0;
     private int mCurrentScore=0;
     private int mNumOfAnswered=0;
@@ -43,6 +56,7 @@ public class QuizActivity extends AppCompatActivity implements Serializable {
             new Question(R.string.question_americas, false),
             new Question(R.string.question_asia, false)
     };
+
 
     /**
      * This method is used to crete ui for activity.
@@ -56,9 +70,11 @@ public class QuizActivity extends AppCompatActivity implements Serializable {
         //inflate: creating object of xml layout
         setContentView(R.layout.activity_quiz);
         if (savedInstanceState != null) {
-            mCurrentIndex = savedInstanceState.getInt("Current_Index");
-            mNumOfAnswered=savedInstanceState.getInt("Number_Of_Answered");
-            mQuestionBank=(Question[]) savedInstanceState.getSerializable("Question_Bank");
+            mCurrentIndex = savedInstanceState.getInt(CURRENT_INDEX);
+            mNumOfAnswered=savedInstanceState.getInt(NUMBER_OF_ANSWERED);
+            mQuestionBank=(Question[]) savedInstanceState.getSerializable(QUESTION_BANK);
+
+
         } else {
 
         }
@@ -73,19 +89,36 @@ public class QuizActivity extends AppCompatActivity implements Serializable {
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState, @NonNull PersistableBundle outPersistentState) {
         super.onSaveInstanceState(outState, outPersistentState);
-        outState.putInt(getString(R.string.Current_Index),mCurrentIndex);
-        outState.putInt(getString(R.string.Number_Of_Answerd),mNumOfAnswered);
-        outState.putSerializable(getString(R.string.Question_Bank),mQuestionBank);
+        outState.putInt(CURRENT_INDEX,mCurrentIndex);
+        outState.putInt(NUMBER_OF_ANSWERED,mNumOfAnswered);
+        outState.putSerializable(QUESTION_BANK,mQuestionBank);
 
 
     }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
-    @SuppressLint("WrongViewCast")
+        if (resultCode != Activity.RESULT_OK || data == null)
+            return;
+
+        //this means if the result if backed from CheatActivity
+        if (requestCode == REQUEST_CODE_CHEAT) {
+            mIsCheater = data.getBooleanExtra(CheatActivity.EXTRA_IS_CHEAT, false);
+            mQuestionBank[mCurrentIndex].setIsCheating(mIsCheater);
+            // if we on score page this method check and set visibility
+            checkGameOver();
+        }
+    }
+
+
+
     private void findViews() {
         mTextViewQuestion = findViewById(R.id.txt_view_question_text);
         mTextViewScore=findViewById(R.id.txt_view_score_text);
         mButtonTrue = findViewById(R.id.btn_true);
         mButtonFalse = findViewById(R.id.btn_false);
+        mButtonCheat=findViewById(R.id.btn_cheat);
         mImageButtonNext= findViewById(R.id.im_btn_next);
         mImageButtonPrev = findViewById(R.id.im_btn_prev);
         mImageButtonLast = findViewById(R.id.im_btn_last);
@@ -160,6 +193,15 @@ public class QuizActivity extends AppCompatActivity implements Serializable {
                 resetGame();
             }
         });
+        mButtonCheat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(QuizActivity.this, CheatActivity.class);
+                intent.putExtra(EXTRA_QUESTION_ANSWER, mQuestionBank[mCurrentIndex].isAnswerTrue());
+
+                startActivityForResult(intent, REQUEST_CODE_CHEAT);
+            }
+        });
 
     }
     private void resetGame(){
@@ -200,32 +242,39 @@ public class QuizActivity extends AppCompatActivity implements Serializable {
 
     @SuppressLint("WrongConstant")
     private void checkAnswer(boolean userPressed) {
-        if (mQuestionBank[mCurrentIndex].isAnswerTrue() == userPressed) {
-            Toast.makeText(QuizActivity.this, R.string.toast_correct, Toast.LENGTH_LONG)
-                    .show();
-            updateScore();
-
-        } else {
-            Toast.makeText(QuizActivity.this, R.string.toast_incorrect, Toast.LENGTH_SHORT)
-                    .show();
-
+        if (mQuestionBank[mCurrentIndex].isIsCheating()) {
+            Toast.makeText(this, R.string.toast_judgment, Toast.LENGTH_LONG).show();
+            mIsCheater=false;
         }
+        else {
+            if (mQuestionBank[mCurrentIndex].isAnswerTrue() == userPressed) {
+                Toast.makeText(QuizActivity.this, R.string.toast_correct, Toast.LENGTH_SHORT)
+                        .show();
+                updateScore();
 
-    }
-    private void showFinalScore(){
-        mTextViewFinalScore.setText("your score is : "+ mCurrentScore);
-        mTextViewFinalScore.setTextSize(30);
+            } else {
+                Toast.makeText(QuizActivity.this, R.string.toast_incorrect, Toast.LENGTH_SHORT)
+                        .show();
 
-    }
-    private void checkGameOver(){
-        if (mNumOfAnswered==mQuestionBank.length){
-            mMainLayout.setVisibility(View.GONE);
-            mScoreLayout.setVisibility(View.VISIBLE);
-            showFinalScore();
+            }
+        }
 
 
 
         }
+        private void showFinalScore () {
+            mTextViewFinalScore.setText("your score is : " + mCurrentScore);
+            mTextViewFinalScore.setTextSize(30);
 
+        }
+        private void checkGameOver () {
+            if (mNumOfAnswered == mQuestionBank.length) {
+                mMainLayout.setVisibility(View.GONE);
+                mScoreLayout.setVisibility(View.VISIBLE);
+                showFinalScore();
+
+
+            }
+
+        }
     }
-}

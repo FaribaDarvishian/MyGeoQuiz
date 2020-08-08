@@ -3,6 +3,15 @@ package com.example.mygeoquiz.Model;
 public class Question {
     private int mQuestionTextResId;
     private boolean mIsAnswerTrue;
+    private boolean mIsCheating;
+
+    public boolean isIsCheating() {
+        return mIsCheating;
+    }
+
+    public void setIsCheating(boolean mIsCheating) {
+        this.mIsCheating = mIsCheating;
+    }
 
     public boolean isIsAnswered() {
         return mIsAnswered;

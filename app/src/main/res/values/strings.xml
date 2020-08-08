@@ -21,6 +21,7 @@
     <string name="number_of_answerd">number</string>
     <string name="question_bank">Question_bank</string>
     <string name="Current_Index" />
-    <string name="Number_Of_Answerd" />
+    <string name="Number_Of_Answered" />
     <string name="Question_Bank" />
+    <string name="toast_judgment">تقلب کار خوبی نیست</string>
 </resources>
