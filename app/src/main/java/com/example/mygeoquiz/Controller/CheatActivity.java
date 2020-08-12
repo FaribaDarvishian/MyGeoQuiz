@@ -18,26 +18,29 @@ import com.example.mygeoquiz.R;
 public class CheatActivity extends AppCompatActivity {
 
     public static final String EXTRA_IS_CHEAT = "com.example.MyGeoQuiz2.isCheat";
-
-
     public static final String TEXT_VIEW_ANSWER = "TextViewAnswer";
+    public static final String M_IS_CHEATED = "mIsCheated";
+    public static final String M_IS_ANSWER_TRUE = "mIsAnswerTrue";
     private TextView mTextViewAnswer;
     private Button mButtonShowAnswer;
 
     private boolean mIsAnswerTrue;
+    private boolean mIsCheated;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cheat);
-        if (savedInstanceState != null) {
-            mTextViewAnswer.setText( savedInstanceState.getString(TEXT_VIEW_ANSWER));
+        findViews();
 
+        if (savedInstanceState != null) {
+
+            mTextViewAnswer.setText(savedInstanceState.getString(TEXT_VIEW_ANSWER));
+            mIsAnswerTrue = getIntent().getBooleanExtra(QuizActivity.EXTRA_QUESTION_ANSWER, false);
+            mIsCheated = getIntent().getBooleanExtra(M_IS_CHEATED, false);
         }
 
-        mIsAnswerTrue = getIntent().getBooleanExtra(QuizActivity.EXTRA_QUESTION_ANSWER, false);
 
-        findViews();
         setListeners();
 
         //1.ResultCode: OK | Cancel (default: Cancel)
@@ -45,9 +48,11 @@ public class CheatActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onSaveInstanceState(@NonNull Bundle outState, @NonNull PersistableBundle outPersistentState) {
-        super.onSaveInstanceState(outState, outPersistentState);
-        outState.putString(TEXT_VIEW_ANSWER, (String) mTextViewAnswer.getText());
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(TEXT_VIEW_ANSWER,  mTextViewAnswer.getText().toString());
+        outState.putBoolean(M_IS_CHEATED,mIsCheated);
+        outState.putBoolean(M_IS_ANSWER_TRUE,mIsAnswerTrue);
     }
 
     @SuppressLint("WrongViewCast")
@@ -60,20 +65,28 @@ public class CheatActivity extends AppCompatActivity {
         mButtonShowAnswer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mIsAnswerTrue)
-                    mTextViewAnswer.setText(R.string.button_true);
-                else
-                    mTextViewAnswer.setText(R.string.button_false);
+
+
+                            if (mIsAnswerTrue) {
+                                mTextViewAnswer.setText(R.string.button_true);
+                            }
+                            else {
+                                mTextViewAnswer.setText(R.string.button_false);
+                            }
+
+
+                        mIsCheated = true;
+                    }
+                });
 
                 setShownAnswerResult(true);
             }
-        });
-    }
 
-    private void setShownAnswerResult(boolean isCheat) {
-        Intent intent = new Intent();
-        intent.putExtra(EXTRA_IS_CHEAT, isCheat);
 
-        setResult(RESULT_OK, intent);
-    }
+            private void setShownAnswerResult(boolean isCheat) {
+                Intent intent = new Intent();
+                intent.putExtra(EXTRA_IS_CHEAT, isCheat);
+                setResult(RESULT_OK, intent);
+
+            }
 }

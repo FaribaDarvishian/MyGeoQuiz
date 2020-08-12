@@ -1,6 +1,8 @@
 package com.example.mygeoquiz.Model;
 
-public class Question {
+import java.io.Serializable;
+
+public class Question implements Serializable {
     private int mQuestionTextResId;
     private boolean mIsAnswerTrue;
     private boolean mIsCheating;

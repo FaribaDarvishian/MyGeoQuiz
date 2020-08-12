@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.view.View;
 
 import android.widget.Button;
@@ -24,13 +23,15 @@ import java.io.Serializable;
 
 public class QuizActivity extends AppCompatActivity implements Serializable {
 
-    public static final String EXTRA_QUESTION_ANSWER = "com.example.GeoQuiz.questionAnswer";
-    private static final String EXTRA_SETTING="com.example.GeoQuiz.textSize";
+    public static final String EXTRA_QUESTION_ANSWER = "com.example.MyGeoQuiz2.questionAnswer";
     public static final String CURRENT_INDEX = "Current_Index";
     public static final String NUMBER_OF_ANSWERED = "Number_Of_Answered";
     public static final String QUESTION_BANK = "Question_Bank";
     public static final int REQUEST_CODE_CHEAT = 0;
     public static final int REQUEST_CODE_SETTING = 1;
+    public static final String CURRENT_SCORE = "CURRENT_SCORE";
+    public static final String EXTRA_TEXT_CURRENT_SIZE = "text_current_size";
+    public static final String EXTRA_CURRENT_COLOR_BACKGROUND = "current_color_background";
 
     private LinearLayout mMainLayout;
     private TextView mTextViewQuestion;
@@ -51,7 +52,8 @@ public class QuizActivity extends AppCompatActivity implements Serializable {
     private int mCurrentIndex = 0;
     private int mCurrentScore=0;
     private int mNumOfAnswered=0;
-    private int mTextSize;
+    private int mTextSize=18;//Medium size
+    private int mColorBackground=R.color.colorWight;
     private Question[] mQuestionBank = {
             new Question(R.string.question_australia, false),
             new Question(R.string.question_oceans, true),
@@ -66,6 +68,7 @@ public class QuizActivity extends AppCompatActivity implements Serializable {
      * This method is used to crete ui for activity.
      * @param savedInstanceState
      */
+    @SuppressLint("ResourceAsColor")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,32 +76,37 @@ public class QuizActivity extends AppCompatActivity implements Serializable {
         //this method will create the layout
         //inflate: creating object of xml layout
         setContentView(R.layout.activity_quiz);
+
+        findViews();
         if (savedInstanceState != null) {
             mCurrentIndex = savedInstanceState.getInt(CURRENT_INDEX);
             mNumOfAnswered=savedInstanceState.getInt(NUMBER_OF_ANSWERED);
             mQuestionBank=(Question[]) savedInstanceState.getSerializable(QUESTION_BANK);
-
-
-        } else {
-
+            mCurrentScore=savedInstanceState.getInt(CURRENT_SCORE);
+            mTextViewScore.setText(" : امتیاز "+ mCurrentScore);
         }
 
         //if we want to change logic we must first find the view objects (it must have "id")
-        findViews();
+
         setListeners();
         updateQuestion();
+        checkGameOver();
+
 
     }
 
     @Override
-    public void onSaveInstanceState(@NonNull Bundle outState, @NonNull PersistableBundle outPersistentState) {
-        super.onSaveInstanceState(outState, outPersistentState);
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
         outState.putInt(CURRENT_INDEX,mCurrentIndex);
         outState.putInt(NUMBER_OF_ANSWERED,mNumOfAnswered);
         outState.putSerializable(QUESTION_BANK,mQuestionBank);
+        outState.putInt(CURRENT_SCORE,mCurrentScore);
+
 
 
     }
+    @SuppressLint("ResourceAsColor")
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -114,9 +122,14 @@ public class QuizActivity extends AppCompatActivity implements Serializable {
             checkGameOver();
         }
         if(requestCode==REQUEST_CODE_SETTING){
-            mTextSize =data.getIntExtra(SettingActivity.EXTRA_IS_SETTING,15);
-            //todo
+            mTextSize =data.getIntExtra(SettingActivity.EXTRA_TEXT_SIZE,mTextSize);
+            mColorBackground=data.getIntExtra(SettingActivity.EXTRA_COLOR_BACKGROUND,mColorBackground);
+            mMainLayout.setBackgroundColor(getResources().getColor(mColorBackground));
+            updateQuestion();
+
+
         }
+
     }
 
 
@@ -216,7 +229,8 @@ public class QuizActivity extends AppCompatActivity implements Serializable {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(QuizActivity.this, SettingActivity.class);
-//                intent.putExtra(EXTRA_SETTING,mTextSize);
+                intent.putExtra(EXTRA_TEXT_CURRENT_SIZE,mTextSize);
+                intent.putExtra(EXTRA_CURRENT_COLOR_BACKGROUND,mColorBackground);
 
                 startActivityForResult(intent, REQUEST_CODE_SETTING);
             }
@@ -226,7 +240,7 @@ public class QuizActivity extends AppCompatActivity implements Serializable {
     private void resetGame(){
         mCurrentScore=0;
         mCurrentIndex=0;
-        mTextViewScore.setText("Score is " + mCurrentScore);
+        mTextViewScore.setText("Score :" + mCurrentScore);
         mButtonTrue.setEnabled(true);
         mButtonFalse.setEnabled(true);
         mNumOfAnswered=0;
@@ -242,6 +256,7 @@ public class QuizActivity extends AppCompatActivity implements Serializable {
     private void updateQuestion() {
         int questionTextResId = mQuestionBank[mCurrentIndex].getQuestionTextResId();
         mTextViewQuestion.setText(questionTextResId);
+        mTextViewQuestion.setTextSize(mTextSize);
         if(!mQuestionBank[mCurrentIndex].isIsAnswered())
         {
             mButtonTrue.setEnabled(true);
@@ -256,7 +271,7 @@ public class QuizActivity extends AppCompatActivity implements Serializable {
     }
 
     private void updateScore(){
-        mTextViewScore.setText("Score :" + ++mCurrentScore);
+        mTextViewScore.setText(" : امتیاز " + ++mCurrentScore);
     }
 
     @SuppressLint("WrongConstant")
@@ -282,7 +297,7 @@ public class QuizActivity extends AppCompatActivity implements Serializable {
 
         }
         private void showFinalScore () {
-            mTextViewFinalScore.setText("your score is : " + mCurrentScore);
+            mTextViewFinalScore.setText( " : امتیاز شما در بازی  " + mCurrentScore);
             mTextViewFinalScore.setTextSize(30);
 
         }

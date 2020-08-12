@@ -1,30 +1,117 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/layout_size"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:id="@+id/setting_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:layout_gravity="center"
     android:gravity="center"
-    android:orientation="vertical"
-    tools:context=".Controller.SettingActivity">
+    android:orientation="horizontal">
 
-    <RadioButton
-        android:id="@+id/rbtn_small"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Small" />
-
-    <RadioButton
-        android:id="@+id/rbtn_mediom"
+    <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:text="Medium" />
-
-    <RadioButton
-        android:id="@+id/rbtn_large"
-        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Large" />
-</LinearLayout>
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/txt_size_setting"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="تغییر سایز سوالات"
+            android:textColor="#000000" />
+
+        <RadioGroup
+            android:id="@+id/radio_group_change_question_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/radio_btn_small"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="کوچک" />
+
+            <RadioButton
+                android:id="@+id/radio_btn_medium"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="متوسط" />
+
+            <RadioButton
+                android:id="@+id/radio_btn_large"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="بزرگ" />
+
+        </RadioGroup>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/txt_color_background_setting"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="تغییر رنگ پس زمینه"
+                android:textColor="#000000" />
+
+            <RadioGroup
+                android:id="@+id/radio_group_change_backGround"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/radio_btn_light_blue"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="آبی " />
+
+                <RadioButton
+                    android:id="@+id/radio_byn_light_red"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="قرمز " />
+
+                <RadioButton
+                    android:id="@+id/radio_btn_light_green"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="سبز" />
+
+                <RadioButton
+                    android:id="@+id/radio_btn_wight"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="سفید" />
+            </RadioGroup>
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center|bottom"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_save"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:text="ذخیره" />
+
+        <Button
+            android:id="@+id/btn_discard"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="برگشت" />
+
+    </LinearLayout>
+
+
+</FrameLayout>
