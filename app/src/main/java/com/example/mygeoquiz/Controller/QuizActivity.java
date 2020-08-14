@@ -17,6 +17,8 @@ import com.example.mygeoquiz.Model.Question;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.mygeoquiz.Model.Setting;
 import com.example.mygeoquiz.R;
 
 import java.io.Serializable;
@@ -24,14 +26,14 @@ import java.io.Serializable;
 public class QuizActivity extends AppCompatActivity implements Serializable {
 
     public static final String EXTRA_QUESTION_ANSWER = "com.example.MyGeoQuiz2.questionAnswer";
+    public static final String EXTRA_SETTING_STATES = "com.example.MyGeoQuiz2.settingStates";
     public static final String CURRENT_INDEX = "Current_Index";
     public static final String NUMBER_OF_ANSWERED = "Number_Of_Answered";
     public static final String QUESTION_BANK = "Question_Bank";
+    public static final String SETTING = "setting";
+    public static final String CURRENT_SCORE = "CURRENT_SCORE";
     public static final int REQUEST_CODE_CHEAT = 0;
     public static final int REQUEST_CODE_SETTING = 1;
-    public static final String CURRENT_SCORE = "CURRENT_SCORE";
-    public static final String EXTRA_TEXT_CURRENT_SIZE = "text_current_size";
-    public static final String EXTRA_CURRENT_COLOR_BACKGROUND = "current_color_background";
 
     private LinearLayout mMainLayout;
     private TextView mTextViewQuestion;
@@ -52,8 +54,8 @@ public class QuizActivity extends AppCompatActivity implements Serializable {
     private int mCurrentIndex = 0;
     private int mCurrentScore=0;
     private int mNumOfAnswered=0;
-    private int mTextSize=18;//Medium size
-    private int mColorBackground=R.color.colorWight;
+//    private int mTextSize=18;//Medium size
+//    private int mColorBackground=R.color.colorWight;
     private Question[] mQuestionBank = {
             new Question(R.string.question_australia, false),
             new Question(R.string.question_oceans, true),
@@ -62,6 +64,9 @@ public class QuizActivity extends AppCompatActivity implements Serializable {
             new Question(R.string.question_americas, false),
             new Question(R.string.question_asia, false)
     };
+
+    private Setting mSetting =new Setting(18,R.color.colorWight,0,
+            0,0,0,0,0,0);
 
 
     /**
@@ -78,11 +83,14 @@ public class QuizActivity extends AppCompatActivity implements Serializable {
         setContentView(R.layout.activity_quiz);
 
         findViews();
+
         if (savedInstanceState != null) {
             mCurrentIndex = savedInstanceState.getInt(CURRENT_INDEX);
             mNumOfAnswered=savedInstanceState.getInt(NUMBER_OF_ANSWERED);
             mQuestionBank=(Question[]) savedInstanceState.getSerializable(QUESTION_BANK);
+            mSetting=((Setting) savedInstanceState.getSerializable(SETTING));
             mCurrentScore=savedInstanceState.getInt(CURRENT_SCORE);
+            seSetting();
             mTextViewScore.setText(" : امتیاز "+ mCurrentScore);
         }
 
@@ -101,6 +109,7 @@ public class QuizActivity extends AppCompatActivity implements Serializable {
         outState.putInt(CURRENT_INDEX,mCurrentIndex);
         outState.putInt(NUMBER_OF_ANSWERED,mNumOfAnswered);
         outState.putSerializable(QUESTION_BANK,mQuestionBank);
+        outState.putSerializable(SETTING,mSetting);
         outState.putInt(CURRENT_SCORE,mCurrentScore);
 
 
@@ -122,16 +131,22 @@ public class QuizActivity extends AppCompatActivity implements Serializable {
             checkGameOver();
         }
         if(requestCode==REQUEST_CODE_SETTING){
-            mTextSize =data.getIntExtra(SettingActivity.EXTRA_TEXT_SIZE,mTextSize);
-            mColorBackground=data.getIntExtra(SettingActivity.EXTRA_COLOR_BACKGROUND,mColorBackground);
-            mMainLayout.setBackgroundColor(getResources().getColor(mColorBackground));
+            mSetting= (Setting) data.getSerializableExtra(SettingActivity.EXTRA_CAL_BACK_SETTING);
+            seSetting();
             updateQuestion();
-
-
         }
-
     }
 
+    private void seSetting() {
+        mMainLayout.setBackgroundColor(getResources().getColor(mSetting.getColorBackground()));
+        mButtonTrue.setVisibility(mSetting.getStateTrueButton());
+        mButtonFalse.setVisibility(mSetting.getStateFalseButton());
+        mImageButtonNext.setVisibility(mSetting.getStateNextButton());
+        mImageButtonPrev.setVisibility(mSetting.getStatePreviousButton());
+        mImageButtonFirst.setVisibility(mSetting.getStateFirstButton());
+        mImageButtonLast.setVisibility(mSetting.getStateLastButton());
+        mButtonCheat.setVisibility(mSetting.getStateCheatButton());
+    }
 
 
     private void findViews() {
@@ -156,6 +171,7 @@ public class QuizActivity extends AppCompatActivity implements Serializable {
         mButtonTrue.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 ++mNumOfAnswered;
                 mButtonTrue.setEnabled(false);
                 mButtonFalse.setEnabled(false);
@@ -225,22 +241,25 @@ public class QuizActivity extends AppCompatActivity implements Serializable {
                 startActivityForResult(intent, REQUEST_CODE_CHEAT);
             }
         });
-        mImageButtonSetting.setOnClickListener(new View.OnClickListener() {
+       mImageButtonSetting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(QuizActivity.this, SettingActivity.class);
-                intent.putExtra(EXTRA_TEXT_CURRENT_SIZE,mTextSize);
-                intent.putExtra(EXTRA_CURRENT_COLOR_BACKGROUND,mColorBackground);
-
+//                intent.putExtra(EXTRA_SETTING_STATES, (Serializable) mSetting);
+                intent.putExtra(EXTRA_SETTING_STATES, mSetting);
+//                intent.putExtra(EXTRA_TEXT_CURRENT_SIZE,mTextSize);
+//                intent.putExtra(EXTRA_CURRENT_COLOR_BACKGROUND,mColorBackground);
                 startActivityForResult(intent, REQUEST_CODE_SETTING);
             }
         });
+
+
 
     }
     private void resetGame(){
         mCurrentScore=0;
         mCurrentIndex=0;
-        mTextViewScore.setText("Score :" + mCurrentScore);
+        mTextViewScore.setText( mCurrentScore + " : امتیاز " );
         mButtonTrue.setEnabled(true);
         mButtonFalse.setEnabled(true);
         mNumOfAnswered=0;
@@ -256,7 +275,7 @@ public class QuizActivity extends AppCompatActivity implements Serializable {
     private void updateQuestion() {
         int questionTextResId = mQuestionBank[mCurrentIndex].getQuestionTextResId();
         mTextViewQuestion.setText(questionTextResId);
-        mTextViewQuestion.setTextSize(mTextSize);
+        mTextViewQuestion.setTextSize(mSetting.getTextSize());
         if(!mQuestionBank[mCurrentIndex].isIsAnswered())
         {
             mButtonTrue.setEnabled(true);
@@ -271,7 +290,7 @@ public class QuizActivity extends AppCompatActivity implements Serializable {
     }
 
     private void updateScore(){
-        mTextViewScore.setText(" : امتیاز " + ++mCurrentScore);
+        mTextViewScore.setText( ++mCurrentScore + " : امتیاز ");
     }
 
     @SuppressLint("WrongConstant")
@@ -284,6 +303,7 @@ public class QuizActivity extends AppCompatActivity implements Serializable {
             if (mQuestionBank[mCurrentIndex].isAnswerTrue() == userPressed) {
                 Toast.makeText(QuizActivity.this, R.string.toast_correct, Toast.LENGTH_SHORT)
                         .show();
+
                 updateScore();
 
             } else {
@@ -307,8 +327,6 @@ public class QuizActivity extends AppCompatActivity implements Serializable {
                 mScoreLayout.setVisibility(View.VISIBLE);
                 showFinalScore();
 
-
             }
-
         }
     }

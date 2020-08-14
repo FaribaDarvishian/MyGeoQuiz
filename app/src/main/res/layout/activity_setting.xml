@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/setting_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -12,14 +10,17 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_marginTop="15dp">
 
         <TextView
             android:id="@+id/txt_size_setting"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="تغییر سایز سوالات"
-            android:textColor="#000000" />
+            android:textColor="#000000"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="5dp"/>
 
         <RadioGroup
             android:id="@+id/radio_group_change_question_size"
@@ -38,7 +39,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:text="متوسط" />
-
             <RadioButton
                 android:id="@+id/radio_btn_large"
                 android:layout_width="match_parent"
@@ -50,14 +50,17 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_marginTop="15dp">
 
             <TextView
                 android:id="@+id/txt_color_background_setting"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="تغییر رنگ پس زمینه"
-                android:textColor="#000000" />
+                android:textColor="#000000"
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="5dp"/>
 
             <RadioGroup
                 android:id="@+id/radio_group_change_backGround"
@@ -69,27 +72,93 @@
                     android:id="@+id/radio_btn_light_blue"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="آبی " />
+                    android:text="@string/blue" />
 
                 <RadioButton
                     android:id="@+id/radio_byn_light_red"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="قرمز " />
+                    android:text="@string/red" />
 
                 <RadioButton
                     android:id="@+id/radio_btn_light_green"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="سبز" />
+                    android:text="@string/green" />
 
                 <RadioButton
                     android:id="@+id/radio_btn_wight"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="سفید" />
+                    android:text="@string/wight" />
             </RadioGroup>
         </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="15dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="تنظیمات نمایش کلیدها"
+                android:textColor="#000000"
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="5dp"/>
+
+            <Switch
+                android:id="@+id/change_state_true_button"
+                android:layout_width="123dp"
+                android:layout_height="wrap_content"
+                android:text="@string/True_button"
+                android:textOff="Hide"
+                android:textOn="Show" />
+
+            <Switch
+                android:id="@+id/change_state_false_button"
+                android:layout_width="123dp"
+                android:layout_height="wrap_content"
+                android:text="@string/false_button"
+                android:textOff="Hide"
+                android:textOn="Show"/>
+
+            <Switch
+                android:id="@+id/change_state_next_button"
+                android:layout_width="123dp"
+                android:layout_height="wrap_content"
+                android:text="@string/next_button"
+                android:textOff="Hide"
+                android:textOn="Show" />
+            <Switch
+                android:id="@+id/change_state_previous_button"
+                android:layout_width="123dp"
+                android:layout_height="wrap_content"
+                android:text="@string/previous_button"
+                android:textOff="Hide"
+                android:textOn ="Show"/>
+            <Switch
+                android:id="@+id/change_state_first_button"
+                android:layout_width="123dp"
+                android:layout_height="wrap_content"
+                android:text="@string/first_button"
+                android:textOff="Hide"
+                android:textOn="Show"/>
+            <Switch
+                android:id="@+id/change_state_last_button"
+                android:layout_width="123dp"
+                android:layout_height="wrap_content"
+                android:text="@string/last_button"
+                android:textOff="Hide"
+                android:textOn ="Show"/>
+            <Switch
+                android:id="@+id/change_state_cheat_button"
+                android:layout_width="123dp"
+                android:layout_height="wrap_content"
+                android:text="@string/cheat_button"
+                android:textOff="Hide"
+                android:textOn ="Show"/>
+        </LinearLayout>
+
     </LinearLayout>
 
     <LinearLayout
@@ -112,6 +181,5 @@
             android:text="برگشت" />
 
     </LinearLayout>
-
 
 </FrameLayout>
