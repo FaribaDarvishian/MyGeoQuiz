@@ -11,6 +11,7 @@ import android.widget.Switch;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.mygeoquiz.Fragment.QuizFragment;
 import com.example.mygeoquiz.Model.Setting;
 import com.example.mygeoquiz.R;
 
@@ -45,7 +46,7 @@ public class SettingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_setting);
         findViews();
         Intent intent = getIntent();
-        mSettingNew = (Setting) intent.getSerializableExtra(QuizActivity.EXTRA_SETTING_STATES);
+        mSettingNew = (Setting) intent.getSerializableExtra(QuizFragment.EXTRA_SETTING_STATES);
         setCurrentStateQuizActivity();
         if (savedInstanceState != null) {
             mSettingNew = (Setting) savedInstanceState.get(SETTING_BUNDLE);
@@ -87,6 +88,7 @@ public class SettingActivity extends AppCompatActivity {
             public void onClick(View view) {
                 mIsSaved = true;
                 setChange();
+                SettingActivity.this.finish();
             }
         });
         mDiscard.setOnClickListener(new View.OnClickListener() {

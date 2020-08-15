@@ -35,4 +35,6 @@
     <string name="first_button">کلید اولین</string>
     <string name="last_button">کلید آخرین</string>
     <string name="cheat_button">کلید تقلب</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
