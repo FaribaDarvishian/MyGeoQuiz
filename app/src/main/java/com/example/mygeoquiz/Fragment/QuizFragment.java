@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 
 import com.example.mygeoquiz.Controller.CheatActivity;
 import com.example.mygeoquiz.Controller.SettingActivity;
+import com.example.mygeoquiz.QuestionRepository;
 import com.example.mygeoquiz.R;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -33,6 +34,7 @@ import com.example.mygeoquiz.Model.Setting;
 import com.example.mygeoquiz.R;
 
 import java.io.Serializable;
+import java.util.List;
 ///**
 // * A simple {@link Fragment} subclass.
 // * Use the {@link QuizFragment#newInstance} factory method to
@@ -51,6 +53,7 @@ public class QuizFragment extends Fragment {
     public static final String CURRENT_SCORE = "CURRENT_SCORE";
     public static final int REQUEST_CODE_CHEAT = 0;
     public static final int REQUEST_CODE_SETTING = 1;
+    private QuestionRepository mQuestionRepository;
 
     private LinearLayout mMainLayout;
     private TextView mTextViewQuestion;
@@ -71,9 +74,10 @@ public class QuizFragment extends Fragment {
     private int mCurrentIndex = 0;
     private int mCurrentScore=0;
     private int mNumOfAnswered=0;
+    private List<Question> mQuestionBank;
     //    private int mTextSize=18;//Medium size
 //    private int mColorBackground=R.color.colorWight;
-    private Question[] mQuestionBank = {
+   /* private Question[] mQuestionBank = {
             new Question(R.string.question_australia, false),
             new Question(R.string.question_oceans, true),
             new Question(R.string.question_mideast, false),
@@ -81,6 +85,8 @@ public class QuizFragment extends Fragment {
             new Question(R.string.question_americas, false),
             new Question(R.string.question_asia, false)
     };
+    */
+
 
     private Setting mSetting =new Setting(18,R.color.colorWight,0,
             0,0,0,0,0,0);
@@ -97,6 +103,9 @@ public class QuizFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mQuestionRepository = QuestionRepository.getInstance();
+        mQuestionBank= mQuestionRepository.getQuestions();
+
 
     }
 

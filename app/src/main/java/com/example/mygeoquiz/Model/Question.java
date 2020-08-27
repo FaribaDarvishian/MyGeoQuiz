@@ -1,51 +1,73 @@
 package com.example.mygeoquiz.Model;
 
 import java.io.Serializable;
+import java.util.UUID;
 
 public class Question implements Serializable {
-    private int mQuestionTextResId;
-    private boolean mIsAnswerTrue;
-    private boolean mIsCheating;
+    private int mTextQuestion;
+    private boolean mAnswerTrue;
+    private boolean mIsAnswered;
+    private boolean mCanCheat;
+    private UUID mId;
+    private String mQuestionTextColor;
 
-    public boolean isIsCheating() {
-        return mIsCheating;
+    public Question() {
+
     }
 
-    public void setIsCheating(boolean mIsCheating) {
-        this.mIsCheating = mIsCheating;
+    public void setIsAnswered(boolean answered) {
+        mIsAnswered = answered;
     }
 
-    public boolean isIsAnswered() {
+    public void setCanCheat(boolean canCheat) {
+        mCanCheat = canCheat;
+    }
+
+    public void setQuestionTextColor(String questionTextColor) {
+        mQuestionTextColor = questionTextColor;
+    }
+
+    public String getQuestionTextColor() {
+        return mQuestionTextColor;
+    }
+
+    public boolean getCanCheat() {
+        return mCanCheat;
+    }
+
+    public boolean getIsAnswered() {
         return mIsAnswered;
     }
 
-    public void setIsAnswered(boolean mIsAnswered) {
-        this.mIsAnswered = mIsAnswered;
+    public int getTextQuestion() {
+        return mTextQuestion;
     }
 
-    private boolean mIsAnswered;
-
-    public int getQuestionTextResId() {
-        return mQuestionTextResId;
-    }
-
-    public void setQuestionTextResId(int questionTextResId) {
-        mQuestionTextResId = questionTextResId;
+    public void setTextQuestion(int mTextQuestion) {
+        this.mTextQuestion = mTextQuestion;
     }
 
     public boolean isAnswerTrue() {
-        return mIsAnswerTrue;
+        return mAnswerTrue;
     }
 
+    public boolean getAnswerTrue(){return mAnswerTrue;}
     public void setAnswerTrue(boolean answerTrue) {
-        mIsAnswerTrue = answerTrue;
+        mAnswerTrue = answerTrue;
+
     }
 
-    public Question(int questionTextResId, boolean isAnswerTrue) {
-        mQuestionTextResId = questionTextResId;
-        mIsAnswerTrue = isAnswerTrue;
+    public UUID getId() {
+        return mId;
     }
 
-    public Question() {
+    public Question(int textQuestion, boolean answerTrue, boolean isAnswered, boolean canCheat) {
+        mId=UUID.randomUUID();
+        mTextQuestion = textQuestion;
+        mAnswerTrue = answerTrue;
+        mIsAnswered = isAnswered;
+        mCanCheat = canCheat;
+//        mQuestionTextColor = questionTextColor;
     }
+
 }
